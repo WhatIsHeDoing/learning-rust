@@ -1,32 +1,21 @@
-use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
+use colored::Colorize;
+
+mod hackerrank;
+mod rust_lang;
 
 fn main() {
-    let secret_number = rand::thread_rng().gen_range(1..=10);
+    println!("{}", "Hacker Rank Challenges\n".blue().bold());
 
-    loop {
-        println!("Please input your guess.");
-        let mut guess = String::new();
+    println!("{}", "Min & Max Sum".yellow().bold());
+    hackerrank::mini_max_sum(&[1, 2, 3, 4, 5]);
+    println!();
 
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line");
+    print!("{}", "\nStaircase".yellow().bold());
+    hackerrank::staircase(5);
+    println!();
 
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
+    println!("{}", "\nRust Language Book Programming\n".blue().bold());
 
-        println!("You guessed: {guess}");
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            }
-        }
-    }
+    println!("{}", "Secret Number".yellow().bold());
+    rust_lang::secret_number();
 }
