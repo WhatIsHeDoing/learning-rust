@@ -1,6 +1,37 @@
+/// https://www.hackerrank.com/challenges/grading/
+pub fn grading_students(grades: &[i32]) -> Vec<i32> {
+    let mut results = Vec::new();
+    let grade_gap = 5;
+
+    for grade in grades {
+        let modulo = grade % grade_gap;
+
+        if grade > &37 && modulo > 2 {
+            let rounded = *grade + (grade_gap - modulo);
+            results.push(rounded);
+            println!("{}", rounded);
+        } else {
+            results.push(*grade);
+            println!("{}", grade);
+        }
+    }
+
+    results
+}
+
+#[cfg(test)]
+mod grading_students_tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(grading_students(&[73, 67, 38, 33]), [75, 67, 40, 33]);
+    }
+}
+
 /// https://www.hackerrank.com/challenges/mini-max-sum/
 pub fn mini_max_sum(arr: &[i32]) -> [i64; 2] {
-    let sum: i64 = arr.iter().map(|&x| x as i64).sum();
+    let sum = arr.iter().fold(0i64, |sum, &val| sum + i64::from(val));
     let maybe_max = arr.iter().max();
     let maybe_min = arr.iter().min();
 
