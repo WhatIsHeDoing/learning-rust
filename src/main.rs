@@ -10,11 +10,10 @@ fn main() {
     hackerrank::mini_max_sum(&[1, 2, 3, 4, 5]);
     println!();
 
-    print!("{}", "\nStaircase".yellow().bold());
+    println!("{}", "\nStaircase".yellow().bold());
     hackerrank::staircase(5);
-    println!();
 
-    println!("{}", "\nRust Language Book Programming\n".blue().bold());
+    println!("{}", "Rust Language Book Programming\n".blue().bold());
 
     println!("{}", "Secret Number".yellow().bold());
     rust_lang::secret_number();
