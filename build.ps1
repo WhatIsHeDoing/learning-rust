@@ -1,9 +1,8 @@
-Write-Output "Cleaning..."
-cargo clean
+# Do not clean as this will remove timings.
 
 Write-Output "Building debug and release..."
 cargo build
-cargo build --release
+cargo build --release --timings
 $exe = "whatishedoing_learning_rust.exe"
 
 Write-Output "Compressing..."
