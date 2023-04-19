@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, cmp::Ordering};
 
 /// https://www.hackerrank.com/challenges/bon-appetit/
 pub fn bon_appetit(bill: &[i32], k: i32, b: i32)-> String {
@@ -10,7 +10,7 @@ pub fn bon_appetit(bill: &[i32], k: i32, b: i32)-> String {
         println!("{}", SUCCESS);
         return SUCCESS.to_string();
     }
-    
+
     let diff = format!("{}", b - katies_bill);
     println!("{}", diff);
     diff
@@ -88,10 +88,52 @@ mod mini_max_sum_tests {
     }
 }
 
+/// https://www.hackerrank.com/challenges/plus-minus/
+pub fn plus_minus(arr: &[i32]) -> (String, String, String
+) {
+    let mut positive: f32 = 0.0;
+    let mut negative: f32 = 0.0;
+    let mut zero: f32 = 0.0;
+
+    for i in arr {
+        match i.cmp(&0) {
+            Ordering::Less => negative += 1.0,
+            Ordering::Greater => positive += 1.0,
+            Ordering::Equal => zero += 1.0
+        }
+    }
+
+    let array_length = arr.len() as f32;
+    let truncated_ratio = |f: f32| format!("{:.6}", f / array_length);
+
+    let postive_ratio = truncated_ratio(positive);
+    let negative_ratio = truncated_ratio(negative);
+    let zero_ratio = truncated_ratio(zero);
+
+    println!("{}", postive_ratio);
+    println!("{}", negative_ratio);
+    println!("{}", zero_ratio);
+
+    (postive_ratio, negative_ratio, zero_ratio)
+}
+
+#[cfg(test)]
+mod plus_minus_tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(
+            plus_minus(&[-4, 3, -9, 0, 4, 1]),
+            ("0.500000".to_string(), "0.333333".to_string(), "0.166667".to_string())
+        );
+    }
+}
+
 /// https://www.hackerrank.com/challenges/sock-merchant/
 pub fn sock_merchant(_: i32, ar: &[i32]) -> i32 {
     let mut sock_counts: HashMap<i32, i32> = HashMap::new();
-    
+
     for i in ar {
         let maybe_value = sock_counts.get(i);
 
@@ -124,11 +166,11 @@ mod sock_merchant_tests {
 pub fn staircase(n: i32) -> String {
     let x: usize = n.try_into().unwrap();
     let mut stairs = "".to_owned();
-    
+
     for i in 1..(x + 1) {
         stairs.push_str(format!("{}{}\n", " ".repeat(x - i), "#".repeat(i)).as_str());
     }
-    
+
     println!("{}", stairs);
     stairs
 }
@@ -145,5 +187,57 @@ mod staircase_tests {
 ####
 ";
         assert_eq!(expected, staircase(4));
+    }
+}
+
+/// Deliberately not using e.g. chrono...
+/// https://www.hackerrank.com/challenges/time-conversion/
+pub fn time_conversion(s: &str) -> String {
+    // "12:01:00PM" => ["12", "01", "00PM"]
+    let time_parts = s.split(":").collect::<Vec<&str>>();
+
+    if let (Some(hour), Some(minute), Some(second_end)) = (time_parts.get(0), time_parts.get(1), time_parts.get(2)) {
+        // Convert the 12-hour hour to 24 (military...)-hour.
+        let mut military_hour = hour.parse::<i32>().unwrap();
+
+        if second_end.ends_with("PM") && military_hour < 12 {
+            military_hour += 12;
+        } else if second_end.ends_with("AM") && military_hour == 12 {
+            military_hour = 0;
+        }
+
+        // "59AM" => "59"...
+        let mut seconds = second_end.to_string();
+        seconds.pop();
+        seconds.pop();
+
+        return format!("{:0>2}:{}:{}", military_hour, minute, seconds)
+    }
+
+    s.to_string()
+}
+
+#[cfg(test)]
+mod time_conversion_tests {
+    use super::*;
+
+    #[test]
+    fn morning() {
+        assert_eq!(time_conversion("12:01:00PM"), "12:01:00");
+    }
+
+    #[test]
+    fn afternoon() {
+        assert_eq!(time_conversion("03:59:59PM"), "15:59:59");
+    }
+
+    #[test]
+    fn past_midnight() {
+        assert_eq!(time_conversion("12:01:00AM"), "00:01:00");
+    }
+
+    #[test]
+    fn past_midnight_again() {
+        assert_eq!(time_conversion("12:40:22AM"), "00:40:22");
     }
 }
