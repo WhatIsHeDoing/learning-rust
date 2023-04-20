@@ -24,12 +24,14 @@ To produce an optimal release build, run `.\build.ps1` on Windows.
 
 I used the following to help create this repository and learn Rust:
 
-* [Learn Rust Book]: starting with the excellent official documentation.
+* [Learn Rust Book]: the excellent official documentation.
 * [Crates]: to find Rust packages.
+* [HackerRank]: to solve challenges using Rust.
 * [Minimizing Rust Binary Size]: C++ programmers love optimising things!
 
 [Crates]: https://crates.io/
 [Darren Hickling]: https://darrenhickling.com/
+[HackerRank]: https://www.hackerrank.com/
 [Learn Rust Book]: https://doc.rust-lang.org/book/
 [Minimizing Rust Binary Size]: https://github.com/johnthagen/min-sized-rust
 [Rust]: https://www.rust-lang.org/
