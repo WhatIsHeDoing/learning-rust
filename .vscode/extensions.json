@@ -1,7 +1,10 @@
 {
 	"recommendations": [
+        "ban.spellright",
+        "editorconfig.editorconfig",
 		"rust-lang.rust-analyzer",
-		"tamasfe.even-better-toml"
+		"tamasfe.even-better-toml",
+        "vscode-icons-team.vscode-icons"
 	],
 	"unwantedRecommendations": []
 }

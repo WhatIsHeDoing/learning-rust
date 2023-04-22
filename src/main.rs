@@ -8,12 +8,20 @@ fn main() {
 
     println!("{}", "Problem Solving\n".green().bold());
 
+    println!("{}", "Birthday Candles".yellow().bold());
+    println!("{}", hackerrank::problem_solving::birthday_cake_candles(&[3, 2, 1, 3]));
+    println!();
+
     println!("{}", "Bon Appetit".yellow().bold());
     hackerrank::problem_solving::bon_appetit(&[3, 10, 2, 9], 1, 7);
     println!();
 
     println!("{}", "Grading Students".yellow().bold());
     hackerrank::problem_solving::grading_students(&[73, 67, 38, 33]);
+    println!();
+
+    println!("{}", "Migratory Birds".yellow().bold());
+    println!("{}", hackerrank::problem_solving::migratory_birds(&[1, 2, 3, 4, 5, 4, 3, 2, 1, 3, 4]));
     println!();
 
     println!("{}", "Min & Max Sum".yellow().bold());

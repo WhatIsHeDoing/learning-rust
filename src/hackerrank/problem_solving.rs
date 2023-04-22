@@ -1,5 +1,25 @@
 use std::{collections::HashMap, cmp::Ordering};
 
+pub fn birthday_cake_candles(candles: &[i32]) -> i32 {
+    let maybe_max = candles.iter().max();
+
+    if let Some(max) = maybe_max {
+        return candles.iter().fold(0, | count, current | if current == max { count + 1 } else { count });
+    }
+
+    0
+}
+
+#[cfg(test)]
+mod birthday_cake_candles_tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(birthday_cake_candles(&[3, 2, 1, 3]), 2);
+    }
+}
+
 /// https://www.hackerrank.com/challenges/bon-appetit/
 pub fn bon_appetit(bill: &[i32], k: i32, b: i32)-> String {
     let ignore: i32 = bill[k as usize];
@@ -59,6 +79,54 @@ mod grading_students_tests {
     #[test]
     fn it_works() {
         assert_eq!(grading_students(&[73, 67, 38, 33]), [75, 67, 40, 33]);
+    }
+}
+
+pub fn migratory_birds(arr: &[i32]) -> i32 {
+    // Convert the array to map of counts.
+    let mut bird_counts: HashMap<i32, i32> = HashMap::new();
+
+    for i in arr {
+        let maybe_value = bird_counts.get(i);
+
+        if let Some(value) = maybe_value {
+            bird_counts.insert(*i, value + 1);
+        } else {
+            bird_counts.insert(*i, 1);
+        }
+    }
+
+    let mut lowest_id = i32::MAX;
+    let mut highest_count = 0;
+
+    for (current_id, current_count) in bird_counts {
+        // Always set the lowest ID if it has a higher count.
+        if current_count > highest_count {
+            lowest_id = current_id;
+        }
+
+        // Use the lower ID if the counts are equal.
+        if current_count == highest_count && current_id < lowest_id {
+            lowest_id = current_id;
+        }
+
+        // Check if this is a new highest count.
+        if current_count > highest_count {
+            highest_count = current_count;
+        }
+    }
+
+    lowest_id
+}
+
+#[cfg(test)]
+mod migratory_birds_tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(migratory_birds(&[1, 4, 4, 4, 5, 3]), 4);
+        assert_eq!(migratory_birds(&[1, 2, 3, 4, 5, 4, 3, 2, 1, 3, 4]), 3);
     }
 }
 
