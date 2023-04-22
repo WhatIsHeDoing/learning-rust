@@ -1,9 +1,11 @@
 use colored::Colorize;
+use warp::Filter;
 
 mod hackerrank;
 mod rust_lang;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     println!("{}", "Hacker Rank Challenges\n".blue().bold());
 
     println!("{}", "Problem Solving\n".green().bold());
@@ -50,7 +52,7 @@ fn main() {
     println!("{:?}", hackerrank::data_structures::reverse_array(&[1, 4, 3, 2]));
     println!();
 
-    println!("{}", "Roatate Left".yellow().bold());
+    println!("{}", "Rotate Left".yellow().bold());
     println!("{:?}", hackerrank::data_structures::rotate_left(4, &[1, 2, 3, 4, 5]));
     println!();
 
@@ -58,4 +60,37 @@ fn main() {
 
     println!("{}", "Secret Number".yellow().bold());
     rust_lang::secret_number();
+    println!();
+
+    println!("{}", "Warp\n".blue().bold());
+    println!();
+
+    // See examples at https://github.com/seanmonstar/warp/tree/master/examples.
+    let bon_appetit_path = warp::path!("bon_appetit")
+        .map(|| hackerrank::problem_solving::bon_appetit(&[3, 10, 2, 9], 1, 7));
+
+    let rotate_left_path = warp::path!("rotate_left" / i32)
+        .map(| rotation | warp::reply::json(&hackerrank::data_structures::rotate_left(rotation, &[1, 2, 3, 4, 5])));
+
+    let staircase_path = warp::path!("staircase" / i32)
+        .map(| levels | hackerrank::problem_solving::staircase(levels));
+
+    let time_conversion_path = warp::path!("time_conversion" / String)
+        .map(| time: String | hackerrank::problem_solving::time_conversion(&time.to_string()));
+
+    let routes = warp::get()
+        .and(bon_appetit_path)
+        .or(rotate_left_path)
+        .or(staircase_path)
+        .or(time_conversion_path);
+
+    println!("{}", "🚀 Serving from http://127.0.0.1:3030/ - try:");
+    println!("{}", "  ➡️ http://127.0.0.1:3030/bon_appetit_path/");
+    println!("{}", "  ➡️ http://127.0.0.1:3030/rotate_left/4/");
+    println!("{}", "  ➡️ http://127.0.0.1:3030/staircase/6/");
+    println!("{}", "  ➡️ http://127.0.0.1:3030/time_conversion/12:40:22AM/");
+
+    warp::serve(routes)
+        .run(([127, 0, 0, 1], 3030))
+        .await;
 }

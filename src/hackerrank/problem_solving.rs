@@ -157,8 +157,7 @@ mod mini_max_sum_tests {
 }
 
 /// https://www.hackerrank.com/challenges/plus-minus/
-pub fn plus_minus(arr: &[i32]) -> (String, String, String
-) {
+pub fn plus_minus(arr: &[i32]) -> (String, String, String) {
     let mut positive: f32 = 0.0;
     let mut negative: f32 = 0.0;
     let mut zero: f32 = 0.0;
