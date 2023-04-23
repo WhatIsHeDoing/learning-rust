@@ -1,9 +1,10 @@
 {
-    "spellright.language": [
-        "en"
-    ],
     "spellright.documentTypes": [
         "markdown",
         "rust"
+    ],
+    "spellright.notificationClass": "warning",
+    "spellright.language": [
+        "en"
     ]
 }

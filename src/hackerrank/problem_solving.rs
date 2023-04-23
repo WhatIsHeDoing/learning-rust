@@ -60,12 +60,9 @@ pub fn grading_students(grades: &[i32]) -> Vec<i32> {
         let modulo = grade % GRADE_GAP;
 
         if grade > &37 && modulo > 2 {
-            let rounded = *grade + (GRADE_GAP - modulo);
-            results.push(rounded);
-            println!("{}", rounded);
+            results.push(*grade + (GRADE_GAP - modulo));
         } else {
             results.push(*grade);
-            println!("{}", grade);
         }
     }
 
@@ -177,10 +174,7 @@ pub fn plus_minus(arr: &[i32]) -> (String, String, String) {
     let negative_ratio = truncated_ratio(negative);
     let zero_ratio = truncated_ratio(zero);
 
-    println!("{}", postive_ratio);
-    println!("{}", negative_ratio);
-    println!("{}", zero_ratio);
-
+    println!("{} {} {}", postive_ratio, negative_ratio, zero_ratio);
     (postive_ratio, negative_ratio, zero_ratio)
 }
 
@@ -231,8 +225,8 @@ mod sock_merchant_tests {
 
 /// https://www.hackerrank.com/challenges/staircase/
 pub fn staircase(n: i32) -> String {
-    let x: usize = n.try_into().unwrap();
-    let mut stairs = "".to_owned();
+    let x = n as usize;
+    let mut stairs = String::new();
 
     for i in 1..(x + 1) {
         stairs.push_str(format!("{}{}\n", " ".repeat(x - i), "#".repeat(i)).as_str());
