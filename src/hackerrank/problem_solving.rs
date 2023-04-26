@@ -1,4 +1,5 @@
 use std::{collections::HashMap, cmp::Ordering};
+use urlencoding;
 
 pub fn birthday_cake_candles(candles: &[i32]) -> i32 {
     let maybe_max = candles.iter().max();
@@ -224,6 +225,24 @@ mod sock_merchant_tests {
 }
 
 /// https://www.hackerrank.com/challenges/staircase/
+#[utoipa::path(
+    get,
+    params(
+        (
+            "stairs" = &i32,
+            Path,
+            description = "Numbers of stair levels to generate, e.g. 5"
+        )
+    ),
+    path = "/staircase/{stairs}",
+    responses(
+        (
+            body = String,
+            description = "Generated staircase",
+            status = 200
+        )
+    )
+)]
 pub fn staircase(n: i32) -> String {
     let x = n as usize;
     let mut stairs = String::new();
@@ -251,11 +270,32 @@ mod staircase_tests {
     }
 }
 
-/// Deliberately not using e.g. chrono...
+/// Converts 12-hour to 24-hour time.
+/// Deliberately not using e.g. chrono.
+/// Will decode a URL parameter from e.g. http://127.0.0.1:3030/time_conversion/12%3A59%3A00AM
 /// https://www.hackerrank.com/challenges/time-conversion/
+#[utoipa::path(
+    get,
+    params(
+        (
+            "time" = &str,
+            Path,
+            description = "12-hour time to convert, e.g. 12:59:00AM"
+        )
+    ),
+    path = "/time_conversion/{time}",
+    responses(
+        (
+            body = String,
+            description = "Converted time, e.g. 00:59:00",
+            status = 200
+        )
+    )
+)]
 pub fn time_conversion(s: &str) -> String {
+    let decoded = urlencoding::decode(s).expect("UTF-8");
     // "12:01:00PM" => ["12", "01", "00PM"]
-    let time_parts = s.split(":").collect::<Vec<&str>>();
+    let time_parts = decoded.split(":").collect::<Vec<&str>>();
 
     if let (Some(hour), Some(minute), Some(second_end)) = (time_parts.get(0), time_parts.get(1), time_parts.get(2)) {
         // Convert the 12-hour hour to 24 (military...)-hour.

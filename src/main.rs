@@ -1,11 +1,21 @@
+use std::sync::Arc;
 use colored::Colorize;
-use warp::Filter;
 
+use warp::{
+    http::Uri,
+    hyper::{Response, StatusCode},
+    path::{FullPath, Tail},
+    Filter, Rejection, Reply,
+};
+
+mod api;
 mod hackerrank;
 mod rust_lang;
 
 use hackerrank::*;
 use rust_lang::*;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::Config;
 
 #[tokio::main]
 async fn main() {
@@ -72,24 +82,25 @@ async fn main() {
     println!("{}", "Warp\n".blue().bold());
     println!();
 
-    // See examples at https://github.com/seanmonstar/warp/tree/master/examples.
-    let bon_appetit_path = warp::path!("bon_appetit")
-        .map(|| problem_solving::bon_appetit(&[3, 10, 2, 9], 1, 7));
+    let config = Arc::new(Config::from("/api-doc.json"));
 
-    let rotate_left_path = warp::path!("rotate_left" / i32)
-        .map(| rotation | warp::reply::json(&data_structures::rotate_left(rotation, &[1, 2, 3, 4, 5])));
+    #[derive(OpenApi)]
+    #[openapi(
+        paths(
+            problem_solving::staircase,
+            problem_solving::time_conversion
+        ),
+        tags((
+            description = "Learning Rust API",
+            name = "Learning Rust"
+        ))
+    )]
+    struct ApiDoc;
 
-    let staircase_path = warp::path!("staircase" / i32)
-        .map(| levels | problem_solving::staircase(levels));
-
-    let time_conversion_path = warp::path!("time_conversion" / String)
-        .map(| time: String | problem_solving::time_conversion(&time.to_string()));
-
-    let routes = warp::get()
-        .and(bon_appetit_path)
-        .or(rotate_left_path)
-        .or(staircase_path)
-        .or(time_conversion_path);
+    let api_doc =
+        warp::path!("api-doc.json")
+            .and(warp::get())
+            .map(|| warp::reply::json(&ApiDoc::openapi()));
 
     println!("{}", "🚀 Serving from http://127.0.0.1:3030/ - try:");
     println!("{}", "  ➡️ http://127.0.0.1:3030/bon_appetit/");
@@ -97,7 +108,47 @@ async fn main() {
     println!("{}", "  ➡️ http://127.0.0.1:3030/staircase/6/");
     println!("{}", "  ➡️ http://127.0.0.1:3030/time_conversion/12:40:22AM/");
 
-    warp::serve(routes)
+    let swagger_ui = warp::path("swagger-ui")
+        .and(warp::get())
+        .and(warp::path::full())
+        .and(warp::path::tail())
+        .and(warp::any().map(move || config.clone()))
+        .and_then(serve_swagger);
+
+    warp::serve(api_doc.or(swagger_ui).or(api::handlers()))
         .run(([127, 0, 0, 1], 3030))
         .await;
+}
+
+async fn serve_swagger(
+    full_path: FullPath,
+    tail: Tail,
+    config: Arc<Config<'static>>,
+) -> Result<Box<dyn Reply + 'static>, Rejection> {
+    if full_path.as_str() == "/swagger-ui" {
+        return Ok(Box::new(warp::redirect::found(Uri::from_static(
+            "/swagger-ui/",
+        ))));
+    }
+
+    let path = tail.as_str();
+
+    match utoipa_swagger_ui::serve(path, config) {
+        Ok(file) => {
+            if let Some(file) = file {
+                Ok(Box::new(
+                    Response::builder()
+                        .header("Content-Type", file.content_type)
+                        .body(file.bytes),
+                ))
+            } else {
+                Ok(Box::new(StatusCode::NOT_FOUND))
+            }
+        }
+        Err(error) => Ok(Box::new(
+            Response::builder()
+                .status(StatusCode::INTERNAL_SERVER_ERROR)
+                .body(error.to_string()),
+        )),
+    }
 }
