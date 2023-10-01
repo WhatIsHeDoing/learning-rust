@@ -4,7 +4,7 @@
 
 ## 👋🏻 Introduction
 
-This repository is helping [Darren Hickling] learn Rust!
+This repository is helping [Darren Hickling] to learn Rust!
 
 ## 📦 Dependencies
 
@@ -19,7 +19,7 @@ You can follow the links to install these or try using my [Setup] scripts.
 
 Use the controls within Rust `.rs` files within [Visual Studio Code], or use the `cargo run` command in a terminal.
 
-To produce an optimal release build, run `.\build.ps1` on Windows.
+To produce an optimal release build, run `sh build.sh` on Mac or Linux and `.\build.ps1` on Windows.
 
 ## 🔗 References
 
