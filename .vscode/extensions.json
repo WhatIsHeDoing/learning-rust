@@ -1,8 +1,8 @@
 {
 	"recommendations": [
-        "ban.spellright",
         "editorconfig.editorconfig",
 		"rust-lang.rust-analyzer",
+        "streetsidesoftware.code-spell-checker",
 		"tamasfe.even-better-toml",
         "vscode-icons-team.vscode-icons"
 	],

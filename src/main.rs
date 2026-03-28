@@ -139,7 +139,7 @@ async fn serve_swagger(
                 Ok(Box::new(
                     Response::builder()
                         .header("Content-Type", file.content_type)
-                        .body(file.bytes),
+                        .body(file.bytes.into_owned()),
                 ))
             } else {
                 Ok(Box::new(StatusCode::NOT_FOUND))

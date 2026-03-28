@@ -1,7 +1,5 @@
 # Learning Rust
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/WhatIsHeDoing/learning-rust/tree/main.svg?style=svg)][CircleCI]
-
 ## 👋🏻 Introduction
 
 This repository is helping [Darren Hickling] to learn Rust!

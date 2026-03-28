@@ -1,4 +1,3 @@
-use rand::Rng;
 use std::{cmp::Ordering, io};
 
 pub enum WebEvent {
@@ -32,7 +31,7 @@ mod enums_tests {
 
 /// https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
 pub fn secret_number() {
-    let secret_number = rand::thread_rng().gen_range(1..=10);
+    let secret_number = rand::random_range(1..=10);
 
     loop {
         println!("Please input your guess.");
